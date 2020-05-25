@@ -37,7 +37,10 @@ module.exports = function (app) {
     
     .post(function (req, res){
       var title = req.body.title;
-      let newBook = new BOOK({title, comments: []});
+      if(title == undefined || title == null) {
+        title = "";
+      }
+      let newBook = new BOOK({title: title, comments: []});
       newBook.save(function(err) {
         if(err) {
           console.log(err);
@@ -67,6 +70,7 @@ module.exports = function (app) {
       BOOK.findById(bookid, function(err, data) {
         if(err) {
           console.log(err);
+          return res.send("no book exists");
         } else {
           //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
           return res.json({"_id": data._id, "title": data.title, "comments": data.comments});
