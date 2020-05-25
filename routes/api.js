@@ -9,13 +9,13 @@
 'use strict';
 
 var expect = require('chai').expect;
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectId;
-const MONGODB_CONNECTION_STRING = process.env.DB;
-//Example connection: MongoClient.connect(MONGODB_CONNECTION_STRING, function(err, db) {});
+var mongodb = require('mongodb');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
 
 module.exports = function (app) {
-
+  mongoose.connect(process.env.DATABASE, {useNewUrlParser: true, useUnifiedTopology: true});
   app.route('/api/books')
     .get(function (req, res){
       //response will be array of book objects
