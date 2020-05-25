@@ -13,9 +13,10 @@ var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-
 module.exports = function (app) {
   mongoose.connect(process.env.DATABASE, {useNewUrlParser: true, useUnifiedTopology: true});
+  const BookSchema = new Schema({title: String, comments: [String]});
+  const BOOK = mongoose.model("BOOK", BookSchema);
   app.route('/api/books')
     .get(function (req, res){
       //response will be array of book objects
