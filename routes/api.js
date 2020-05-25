@@ -64,18 +64,44 @@ module.exports = function (app) {
   app.route('/api/books/:id')
     .get(function (req, res){
       var bookid = req.params.id;
-      //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+      BOOK.findById(bookid, function(err, data) {
+        if(err) {
+          console.log(err);
+        } else {
+          //json res format: {"_id": bookid, "title": book_title, "comments": [comment,comment,...]}
+          return res.json({"_id": data._id, "title": data.title, "comments": data.comments});
+        }
+      })
     })
     
     .post(function(req, res){
       var bookid = req.params.id;
       var comment = req.body.comment;
-      //json res format same as .get
+      BOOK.findById(bookid, function(err, data) {
+        if(err) {
+          console.log(err);
+        } else {
+          data.comments.push(comment);
+          data.save((err) => {
+            if(err) {console.log(err)}
+          });
+          //json res format same as .get
+          return res.json({"_id": data._id, "title": data.title, "comments": data.comments});
+        }
+      })
     })
     
     .delete(function(req, res){
       var bookid = req.params.id;
       //if successful response will be 'delete successful'
+      BOOK.findByIdAndDelete(bookid, function(err) {
+        if(err) {
+          console.log(err);
+          return res.send("error: could not delete");
+        } else {
+          return res.send("delete successful");
+        }
+      })
     });
   
 };
